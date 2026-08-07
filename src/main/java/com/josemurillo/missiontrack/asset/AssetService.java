@@ -44,4 +44,18 @@ public class AssetService {
             return Optional.empty();
         }
     }
+
+    public Optional<Asset> updateAssetStatus(Long id, AssetStatus status) {
+        Optional<Asset> existingAsset = assetRepository.findById(id);
+
+        if (existingAsset.isPresent()) {
+            Asset asset = existingAsset.get();
+            asset.setStatus(status);
+
+            Asset savedAsset = assetRepository.save(asset);
+            return Optional.of(savedAsset);
+        } else {
+            return Optional.empty();
+        }
+    }
 }
