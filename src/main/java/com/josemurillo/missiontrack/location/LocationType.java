@@ -1,4 +1,4 @@
-package com.josemurillo.missiontrack.asset;
+package com.josemurillo.missiontrack.location;
 
 public enum LocationType {
     WAREHOUSE,
