@@ -1,6 +1,5 @@
 package com.josemurillo.missiontrack.asset;
 
-import com.josemurillo.missiontrack.asset.dto.UpdateAssetLocationRequest;
 import com.josemurillo.missiontrack.asset.dto.UpdateAssetStatusRequest;
 import org.springframework.http.ResponseEntity;
 import java.util.Optional;
@@ -56,16 +55,6 @@ public class AssetController {
         if (asset.isPresent()) {
             return ResponseEntity.ok(asset.get());
         } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PatchMapping("/{id}/location")
-    public ResponseEntity<Asset> updateAssetLocation(@PathVariable Long id, @RequestBody UpdateAssetLocationRequest request) {
-        Optional<Asset> asset = assetService.updateAssetLocation(id, request.getLocationId());
-        if (asset.isPresent()) {
-            return ResponseEntity.ok(asset.get());
-        } else  {
             return ResponseEntity.notFound().build();
         }
     }
