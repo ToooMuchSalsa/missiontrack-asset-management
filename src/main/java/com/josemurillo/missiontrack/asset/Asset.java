@@ -1,6 +1,7 @@
 package com.josemurillo.missiontrack.asset;
 
 import jakarta.persistence.*;
+import com.josemurillo.missiontrack.location.Location;
 
 @Entity
 @Table(name = "assets")
@@ -31,6 +32,10 @@ public class Asset {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AssetStatus status = AssetStatus.AVAILABLE;
+
+    @ManyToOne
+    @JoinColumn(name = "current_location_id")
+    private Location currentLocation;
 
     public Asset() {
 
@@ -106,6 +111,14 @@ public class Asset {
 
     public void setStatus(AssetStatus status) {
         this.status = status;
+    }
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 
 }

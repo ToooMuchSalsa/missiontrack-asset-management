@@ -6,7 +6,6 @@ public class UpdateAssetStatusRequest {
     private AssetStatus status;
 
     public UpdateAssetStatusRequest() {
-
     }
 
     public AssetStatus getStatus() {

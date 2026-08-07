@@ -1,5 +1,7 @@
 package com.josemurillo.missiontrack.asset;
 
+import com.josemurillo.missiontrack.location.Location;
+import com.josemurillo.missiontrack.location.LocationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,8 +11,11 @@ import java.util.Optional;
 public class AssetService {
     private final AssetRepository assetRepository;
 
-    public AssetService(AssetRepository assetRepository) {
+    private final LocationRepository locationRepository;
+
+    public AssetService(AssetRepository assetRepository, LocationRepository locationRepository) {
         this.assetRepository = assetRepository;
+        this.locationRepository = locationRepository;
     }
 
     public Asset createAsset(Asset asset) {
@@ -38,8 +43,8 @@ public class AssetService {
             asset.setManufacturer(updatedAsset.getManufacturer());
             asset.setModel(updatedAsset.getModel());
             asset.setStatus(updatedAsset.getStatus());
-            assetRepository.save(asset);
-            return Optional.of(asset);
+            Asset savedAsset = assetRepository.save(asset);
+            return Optional.of(savedAsset);
         } else {
             return Optional.empty();
         }
@@ -56,6 +61,23 @@ public class AssetService {
             return Optional.of(savedAsset);
         } else {
             return Optional.empty();
+        }
+    }
+
+    public Optional<Asset> updateAssetLocation(Long id, Long locationId) {
+        Optional<Asset> existingAsset = assetRepository.findById(id);
+        Optional<Location> existingLocation = locationRepository.findById(locationId);
+
+        if (existingAsset.isEmpty() || existingLocation.isEmpty()) {
+            return Optional.empty();
+        } else {
+            Asset asset = existingAsset.get();
+            Location location = existingLocation.get();
+
+            asset.setCurrentLocation(location);
+
+            Asset savedAsset = assetRepository.save(asset);
+            return Optional.of(savedAsset);
         }
     }
 }
