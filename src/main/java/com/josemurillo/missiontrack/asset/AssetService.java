@@ -3,6 +3,7 @@ package com.josemurillo.missiontrack.asset;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssetService {
@@ -19,5 +20,8 @@ public class AssetService {
     public List<Asset> getAllAssets() {
         return assetRepository.findAll();
     }
-    
+
+    public Optional<Asset>  getAssetById(Long id) {
+        return assetRepository.findById(id);
+    }
 }
