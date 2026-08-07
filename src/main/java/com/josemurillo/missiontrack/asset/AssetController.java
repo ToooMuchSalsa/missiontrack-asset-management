@@ -1,9 +1,13 @@
 package com.josemurillo.missiontrack.asset;
 
 import com.josemurillo.missiontrack.asset.dto.UpdateAssetStatusRequest;
+import com.josemurillo.missiontrack.transfer.dto.TransferHistoryResponse;
 import org.springframework.http.ResponseEntity;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.*;
+
+import com.josemurillo.missiontrack.transfer.Transfer;
+import com.josemurillo.missiontrack.transfer.TransferService;
 
 import java.util.List;
 
@@ -12,8 +16,13 @@ import java.util.List;
 public class AssetController {
     private final AssetService assetService;
 
-    public AssetController(AssetService assetService) {
+    private final TransferService transferService;
+
+    public AssetController(
+            AssetService assetService,
+            TransferService transferService) {
         this.assetService = assetService;
+        this.transferService = transferService;
     }
 
     @GetMapping
@@ -55,6 +64,18 @@ public class AssetController {
         if (asset.isPresent()) {
             return ResponseEntity.ok(asset.get());
         } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/{id}/transfers")
+    public ResponseEntity<List<TransferHistoryResponse>> getTransferHistory(
+            @PathVariable Long id) {
+        Optional<List<TransferHistoryResponse>> transfers = transferService.getTransferHistory(id);
+
+        if (transfers.isPresent()) {
+            return ResponseEntity.ok(transfers.get());
+        } else  {
             return ResponseEntity.notFound().build();
         }
     }

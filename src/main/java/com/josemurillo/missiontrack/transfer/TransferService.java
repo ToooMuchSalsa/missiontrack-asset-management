@@ -5,10 +5,16 @@ import com.josemurillo.missiontrack.asset.Asset;
 import com.josemurillo.missiontrack.asset.AssetRepository;
 import com.josemurillo.missiontrack.location.Location;
 import com.josemurillo.missiontrack.location.LocationRepository;
+import com.josemurillo.missiontrack.transfer.dto.TransferHistoryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+
+import com.josemurillo.missiontrack.transfer.dto.TransferHistoryResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransferService {
@@ -71,5 +77,38 @@ public class TransferService {
         return Optional.of(savedTransfer);
     }
 
+    public Optional<List<TransferHistoryResponse>> getTransferHistory(Long assetId) {
 
+        if (!assetRepository.existsById(assetId)) {
+            return Optional.empty();
+        }
+
+        List<Transfer> transfers =
+                transferRepository.findByAsset_IdOrderByTransferDateAsc(assetId);
+
+        List<TransferHistoryResponse> responses = new ArrayList<>();
+
+        for (Transfer transfer : transfers) {
+            TransferHistoryResponse response = new TransferHistoryResponse();
+
+            response.setId(transfer.getId());
+            response.setAssetId(transfer.getAsset().getId());
+            response.setAssetTag(transfer.getAsset().getAssetTag());
+
+            if (transfer.getPreviousLocation() != null) {
+                response.setPreviousLocationId(transfer.getPreviousLocation().getId());
+                response.setPreviousLocationName(transfer.getPreviousLocation().getName());
+            }
+            response.setNewLocationId(transfer.getNewLocation().getId());
+            response.setNewLocationName(transfer.getNewLocation().getName());
+            response.setTransferDate(transfer.getTransferDate());
+            response.setTransferredBy(transfer.getTransferredBy());
+            response.setReason(transfer.getReason());
+
+            responses.add(response);
+        }
+
+
+        return Optional.of(responses);
+    }
 }
