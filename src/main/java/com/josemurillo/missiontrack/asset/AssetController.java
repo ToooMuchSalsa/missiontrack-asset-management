@@ -36,4 +36,14 @@ public class AssetController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Asset> updateAsset(@PathVariable Long id, @RequestBody Asset updatedAsset) {
+        Optional<Asset> asset = assetService.updateAsset(id, updatedAsset);
+
+        if (asset.isPresent()) {
+            return ResponseEntity.ok(asset.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
