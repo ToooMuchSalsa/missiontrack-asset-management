@@ -108,7 +108,6 @@ public class TransferService {
             responses.add(response);
         }
 
-
         return Optional.of(responses);
     }
 }
