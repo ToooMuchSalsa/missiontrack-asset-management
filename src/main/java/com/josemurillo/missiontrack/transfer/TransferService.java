@@ -1,5 +1,6 @@
 package com.josemurillo.missiontrack.transfer;
 
+import com.josemurillo.missiontrack.exception.InvalidTransferException;
 import com.josemurillo.missiontrack.asset.Asset;
 import com.josemurillo.missiontrack.asset.AssetRepository;
 import com.josemurillo.missiontrack.location.Location;
@@ -44,6 +45,16 @@ public class TransferService {
 
         Location previousLocation = asset.getCurrentLocation();
 
+        // Business rule:
+        // Do not allow a transfer to the asset's current location.
+        if (previousLocation != null &&
+                previousLocation.getId().equals(newLocation.getId())) {
+
+            throw new InvalidTransferException(
+                    "Asset is already at this location"
+            );
+        }
+
         Transfer transfer = new Transfer();
         transfer.setAsset(asset);
         transfer.setPreviousLocation(previousLocation);
@@ -59,4 +70,6 @@ public class TransferService {
 
         return Optional.of(savedTransfer);
     }
+
+
 }
